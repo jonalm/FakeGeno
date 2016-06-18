@@ -1,5 +1,6 @@
 module FakeGeno
 
+using ProgressMeter
 using Roots
 using Distributions
 using StatsBase

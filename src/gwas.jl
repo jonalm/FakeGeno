@@ -5,7 +5,7 @@ function GWAS(pop::AbstractMatrix{Bool}, casecontrol::AbstractVector{Bool})
 
     zscores = Vector{Float64}(Nsnp)
 
-    for i in 1:Nsnp
+    @showprogress 1 "calculating GWAS z-scores ..." for i in 1:Nsnp
         try
             logit = glm(Float64[one_vec dosT[:,i]], casecontrol, Binomial(), LogitLink())
             zscores[i] = coef(logit)[2] / stderr(logit)[2]
@@ -27,7 +27,7 @@ function nullpermuteGWAS(pop::AbstractMatrix{Bool}, prevalence::Float64, Npermut
     Nsnp = size(pop)[1]
 
     zmat = Array(Float64, Nsnp, Npermute)
-    for i in 1:Npermute
+    @showprogress 1 "looping over case/control permutations ..." for i in 1:Npermute
         casecontrol = rand(Nind).<prevalence;
         zscores = GWAS(pop, casecontrol)
         zmat[:, i] = zscores

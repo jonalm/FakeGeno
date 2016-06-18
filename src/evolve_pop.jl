@@ -55,7 +55,7 @@ end
 
 function evolve_pop!(pop::AbstractMatrix{Bool}, Niter::Int;
                      hotspots::Vector{Int}=Int[], mutationrate::Float64=-1)
-    for i in 1:Niter
+    @showprogress 1 "evolving population ..." for i in 1:Niter
         evolve_pop_once!(pop, hotspots=hotspots, mutationrate=mutationrate)
     end
 end
