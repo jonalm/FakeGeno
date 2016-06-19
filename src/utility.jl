@@ -31,3 +31,5 @@ function heterozygote(pop::AbstractMatrix{Bool})
     pHW = sqrt(zf[:,1])
     Float64[zf[:,2] 2*pHW.*(1-pHW)]
 end
+
+z2p(zscores) = [ ccdf(Normal(), abs(z)) for z in zscores]

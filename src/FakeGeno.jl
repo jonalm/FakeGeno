@@ -21,7 +21,8 @@ zhist,
 calc_dosage,
 heterozygote,
 GWAS,
-nullpermuteGWAS
+nullpermuteGWAS,
+z2p
 
 include("initial_pop.jl")
 include("evolve_pop.jl")

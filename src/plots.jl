@@ -1,3 +1,5 @@
+include("mycolors.jl")
+
 function showmatrix(matrix::AbstractMatrix; minmax=[0,1], cmap="binary")
     fig = plt[:figure]()
     ax = fig[:add_axes]([0,0,1,1])
@@ -6,36 +8,40 @@ function showmatrix(matrix::AbstractMatrix; minmax=[0,1], cmap="binary")
     fig
 end
 
-function zhist(zscores::AbstractVector)
+function zhist{T<:Real}(zscores::Vector{T}; lim=3.0)
     x = collect(linspace(-3.5,3.5,40))
-    BLUE = "#348ABD"
-    RED = "#A60628"
     fig = plt[:figure](figsize=(5,3))
     ax = fig[:add_subplot](111)
     ax[:hist](zscores, bins=x, color=BLUE, ec="white",normed=1)
     ax[:plot](x, pdf(Normal(),x),"--",color=RED, lw=2)
     ax[:set_ylim]([0,0.5])
-    ax[:set_xlim]([x[1],x[end]])
+    ax[:set_xlim]([-lim,lim])
     fig
 end
 
-function manhattanplot(zscores::AbstractVector, snpnumber::AbstractVector)
-    @assert length(zscores) == length(snpnumber)
-    RED = "#A60628"
-    log = log10
+function manhattanplot{T<:Real}(zscores::Vector{T}, highlight::AbstractVector{Bool}=Bool[])
+    N = length(zscores)
+    if length(highlight) != N
+        highlight=BitArray(N)
+        highlight[:] = false
+    end
 
-    neglogp = -log(calcpvals(zscores))
-    Bonf1 = -log(0.05/length(snpnumber))
-    Bonf2 = -log(0.01/length(snpnumber))
-    range = [snpnumber[1],snpnumber[end]]
+    neglogp = -log10(z2p(zscores))
+    snpnumber = collect(1:N)
+        
 
+    range = [0,N+1]
+    Bonf1 = -log10(0.05/N)
+    Bonf2 = -log10(0.01/N)
+    
     fig = plt[:figure](figsize=(5,3))
     ax = fig[:add_subplot](111)
-    ax[:plot](snpnumber, neglogp, "xk")
-    ax[:plot](range, [Bonf2, Bonf2], "--", color=RED)
-    ax[:plot](range, [Bonf1, Bonf1], ":", color=RED)
+    ax[:plot](snpnumber[~highlight], neglogp[~highlight], "xk")
+    ax[:plot](snpnumber[highlight], neglogp[highlight], "o", color=RED)
 
-    ax[:set_ylim]([0,9])
+    ax[:plot](range, [Bonf2, Bonf2], "--", color=GREEN)
+    ax[:plot](range, [Bonf1, Bonf1], ":", color=GREEN)
     ax[:set_xlim](range)
     fig
 end
+

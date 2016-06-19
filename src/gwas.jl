@@ -1,4 +1,4 @@
-function GWAS(pop::AbstractMatrix{Bool}, casecontrol::AbstractVector{Bool})
+function GWAS(pop::AbstractMatrix{Bool}, cases::AbstractVector{Bool})
     dosT = calc_dosage(pop)' # each column corresponds to snp
     (Nind, Nsnp) = size(dosT)
     one_vec = ones(Nind)
@@ -7,7 +7,7 @@ function GWAS(pop::AbstractMatrix{Bool}, casecontrol::AbstractVector{Bool})
 
     @showprogress 1 "calculating GWAS z-scores ..." for i in 1:Nsnp
         try
-            logit = glm(Float64[one_vec dosT[:,i]], casecontrol, Binomial(), LogitLink())
+            logit = glm(Float64[one_vec dosT[:,i]], cases, Binomial(), LogitLink())
             zscores[i] = coef(logit)[2] / stderr(logit)[2]
         catch err
             if isa(err, Base.LinAlg.PosDefException)
@@ -28,8 +28,8 @@ function nullpermuteGWAS(pop::AbstractMatrix{Bool}, prevalence::Float64, Npermut
 
     zmat = Array(Float64, Nsnp, Npermute)
     @showprogress 1 "looping over case/control permutations ..." for i in 1:Npermute
-        casecontrol = rand(Nind).<prevalence;
-        zscores = GWAS(pop, casecontrol)
+        cases = rand(Nind).<prevalence;
+        zscores = GWAS(pop, cases)
         zmat[:, i] = zscores
     end
     zmat
