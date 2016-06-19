@@ -60,11 +60,10 @@ function evolve_pop!(pop::AbstractMatrix{Bool}, Niter::Int;
     end
 end
 
-function make_pop(Nsnp::Int, Nind::Int, Nhs::Int; initials_sample=create_pop_random)
+function make_pop(Nsnp::Int, Nind::Int, Nhs::Int, hzygosity::Float64;
+                  initials_sample=create_pop_random)
     @assert Nhs < (Nsnp-1)
-
-    h = 0.35
-    mrate = calc_mrate(Nind, h)
+    mrate = calc_mrate(Nind, hzygosity)
     Niter = 4*2*Nind
 
     println("================================================")
@@ -77,7 +76,7 @@ function make_pop(Nsnp::Int, Nind::Int, Nhs::Int; initials_sample=create_pop_ran
     println("# hotspots     : $Nhs")
     println()
     println("mutationrate set to $mrate")
-    println("corresponding to average heterozygosity : $h")
+    println("corresponding to average heterozygosity : $hzygosity")
     println("================================================")
 
     
