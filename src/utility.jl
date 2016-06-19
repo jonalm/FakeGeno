@@ -33,3 +33,4 @@ function heterozygote(pop::AbstractMatrix{Bool})
 end
 
 z2p(zscores) = [ ccdf(Normal(), abs(z)) for z in zscores]
+removenan(vec) = vec[~isnan(vec)]
