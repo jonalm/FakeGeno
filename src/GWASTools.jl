@@ -1,4 +1,4 @@
-module FakeGeno
+module GWASTools
 
 using ProgressMeter
 using Roots
