@@ -86,7 +86,6 @@ function make_pop(Nsnp::Int, Nind::Int, Nhs::Int, hzygosity::Float64;
     pop
 end
 
-
 # asymptotic prob for individual having two different alleles
 function calc_mrate(Nind::Int, heterozygozity::Float64)
     heterozygote_pred(Nind, mrate) =  2(mrate*(1-mrate)) / (1 - 4*(mrate-0.5)^2 * (1-1/(2Nind)))

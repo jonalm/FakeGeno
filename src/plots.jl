@@ -36,7 +36,7 @@ function manhattanplot{T<:Real}(zscores::Vector{T}, highlight::AbstractVector{Bo
     
     fig = plt[:figure](figsize=(5,3))
     ax = fig[:add_subplot](111)
-    ax[:plot](snpnumber[~highlight], neglogp[~highlight], "xk")
+    ax[:plot](snpnumber[~highlight], neglogp[~highlight], "xk", alpha=0.5)
     ax[:plot](snpnumber[highlight], neglogp[highlight], "o", color=RED)
 
     ax[:plot](range, [Bonf2, Bonf2], "--", color=GREEN)
@@ -45,3 +45,15 @@ function manhattanplot{T<:Real}(zscores::Vector{T}, highlight::AbstractVector{Bo
     fig
 end
 
+function probhist(sample::Vector)
+    @assert 0.0 <= minimum(sample) < maximum(sample) <= 1.0
+    beta = fit(Beta, sample)
+    mm = mean(sample)
+    p = linspace(0,1,50)
+    
+    fig = plt[:figure](figsize=(5,3))
+    ax = fig[:add_subplot](111)
+    ax[:hist](sample, p, color=GWASTools.BLUE, alpha=0.5, normed=1)
+    ax[:plot](p, pdf(beta,p), "--k", alpha=0.5)
+    ax[:plot]([mm, mm], ax[:get_ylim](),"-",color=GWASTools.RED, lw=1.6)
+end
