@@ -1,12 +1,12 @@
 module GWASTools
 
-
 using ProgressMeter
 using Roots
 using Distributions
 using StatsBase
 using PyPlot
 using GLM
+using HDF5
 
 export
 cor, #from StatsBase
@@ -23,7 +23,11 @@ calc_dosage,
 heterozygote,
 GWAS,
 nullpermuteGWAS,
-z2p
+z2p,
+cbp2abspos,
+abspos2cbp,
+findsorted,
+readrow
 
 include("initial_pop.jl")
 include("evolve_pop.jl")

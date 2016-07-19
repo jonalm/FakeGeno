@@ -34,3 +34,58 @@ end
 
 z2p(zscores) = [ ccdf(Normal(), abs(z)) for z in zscores]
 removenan(vec) = vec[~isnan(vec)]
+
+# https://genome.ucsc.edu/goldenpath/help/hg19.chrom.sizes
+CHRLENGHThg19 = cumsum(Int[0,
+                           249250621, # chr1 lenght
+                           243199373,
+                           198022430,
+                           191154276,
+                           180915260, # chr5 length
+                           171115067, 
+                           159138663,
+                           146364022,
+                           141213431,
+                           135534747, # chr10 lenght
+                           135006516,
+                           133851895,
+                           115169878,
+                           107349540,
+                           102531392, # chr15 lenght
+                           90354753,
+                           81195210,
+                           78077248,
+                           59128983,
+                           63025520,  # chr20 length
+                           48129895,
+                           51304566])
+
+function cbp2abspos(c::Integer, bp::Integer, chrlength::Vector{Int}=CHRLENGHThg19)
+    chrlength[c]+bp
+end
+
+function abspos2cbp(abspos::Integer, chrlength::Vector{Int}=CHRLENGHThg19)
+    temp = findfirst(chrlength .>= abspos, true) - 1
+    chr = temp < 0 ? 23 : temp
+    (chr, abspos - chrlength[chr])
+end
+
+function findsorted{T<:Any}(A::Vector{T}, v::T)
+    I = (0, length(A)) # interval,
+    while true
+        L = I[2] - I[1] # interval length
+        if L<=1
+            return A[I[2]] == v ? I[2] : -1
+        end
+        half = I[1] + L >>> 1
+        I = v<=A[half] ? (I[1], half) : (half, I[2])
+    end
+end
+
+function readrow(file::HDF5.HDF5File,ir_objname::ASCIIString,jc_objname::ASCIIString,colnum::Int)
+    # read row indices from a CSC sparse matrix format (compressed sparse column matrix)
+    # note that ir and jc in HDF5 file is assumed to be indexed from 0
+    # rowindices = ir[jc[columnindex]:jc[columnindex+1]-1]
+    jc1, jc2 = file[jc_objname][colnum:(colnum+1)]
+    Int[i+1 for i in file[ir_objname][Int(jc1+1):Int(jc2)]]
+end
