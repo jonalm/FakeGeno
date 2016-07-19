@@ -2,6 +2,6 @@ data/*
 scratch/*
 *.DS_store
 .ipynb_checkpoints/
-notes/.ipynb_checkpoints/
+notebooks/.ipynb_checkpoints/
 *.hdf5
 *.html

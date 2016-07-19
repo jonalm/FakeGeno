@@ -79,7 +79,7 @@ function remove_snps_under_maf_threshold(pop::Matrix, threshold::Float64)
 end
 
 function make_pop(Nsnp::Int, Nind::Int, Nhs::Int;
-                  hzygosity::Float64=0.4;
+                  hzygosity::Float64=0.4,
                   maf_cutoff::Float64=0.05,
                   initials_sample::Function=create_pop_random)
     @assert Nhs < (Nsnp-1)
@@ -98,7 +98,6 @@ function make_pop(Nsnp::Int, Nind::Int, Nhs::Int;
     println("# mutationrate : $mrate")
     println("# approx hz    : $hzygosity")
     println()
-    println("corresponding to average heterozygosity : $hzygosity")
     println("================================================")
 
     pop = initials_sample(Nsnp, Nind)
@@ -106,6 +105,8 @@ function make_pop(Nsnp::Int, Nind::Int, Nhs::Int;
     evolve_pop!(pop, Niter, hotspots=hotspots, mutationrate=mrate)
     make_all_snps_minor!(pop)
     pop = remove_snps_under_maf_threshold(pop, maf_cutoff)
+    println("# individuals after cutoff  : $(size(pop)[2])")
+    println("================================================")
     pop
 end
 
