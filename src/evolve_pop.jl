@@ -94,9 +94,9 @@ function make_pop(Nsnp::Int, Nind::Int, Nhs::Int;
     println("# SNPs         : $Nsnp")
     println("# generations  : $Niter   ($(Niter/(2Nind)) x char. decay)")
     println("# hotspots     : $Nhs")
-    println("# maf cutoff   : $maf_cutoff")
     println("# mutationrate : $mrate")
     println("# approx hz    : $hzygosity")
+    println("# maf cutoff   : $maf_cutoff")
     println()
     println("================================================")
 
@@ -105,7 +105,7 @@ function make_pop(Nsnp::Int, Nind::Int, Nhs::Int;
     evolve_pop!(pop, Niter, hotspots=hotspots, mutationrate=mrate)
     make_all_snps_minor!(pop)
     pop = remove_snps_under_maf_threshold(pop, maf_cutoff)
-    println("# individuals after cutoff  : $(size(pop)[2])")
+    println("# SNPs after cutoff  : $(size(pop)[1])")
     println("================================================")
     pop
 end
