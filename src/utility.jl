@@ -24,8 +24,9 @@ function heterozygote(pop::AbstractMatrix{Bool})
     Float64[zf[:,2] 2*pHW.*(1-pHW)]
 end
 
-z2p(zscores) = [ 2*ccdf(Normal(), abs(z)) for z in zscores]
 removenan(vec) = vec[~isnan(vec)]
+
+z2p(zscores::Vector{Float64}) = [ 2*ccdf(Normal(), abs(z)) for z in zscores]
 
 # https://genome.ucsc.edu/goldenpath/help/hg19.chrom.sizes
 CHRLENGHThg19 = cumsum(Int[0,
@@ -81,3 +82,4 @@ function readrow(file::HDF5.HDF5File,ir_objname::ASCIIString,jc_objname::ASCIISt
     jc1, jc2 = file[jc_objname][colnum:(colnum+1)]
     Int[i+1 for i in file[ir_objname][Int(jc1+1):Int(jc2)]]
 end
+

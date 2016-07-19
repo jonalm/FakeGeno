@@ -53,7 +53,13 @@ function probhist(sample::Vector)
     
     fig = plt[:figure](figsize=(5,3))
     ax = fig[:add_subplot](111)
-    ax[:hist](sample, p, color=GWASTools.BLUE, alpha=0.5, normed=1)
-    ax[:plot](p, pdf(beta,p), "--k", alpha=0.5)
-    ax[:plot]([mm, mm], ax[:get_ylim](),"-",color=GWASTools.RED, lw=1.6)
+    ax[:hist](sample, p, color=BLUE, alpha=1, normed=1)
+    ax[:plot](p, pdf(beta,p), "--k", alpha=1, lw=1)
 end
+
+function uniform_quantile(N::Int)
+    q = linspace(0,1,N+1)[1:end-1]
+    q += 0.5*q[2]
+    q 
+end
+
