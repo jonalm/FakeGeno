@@ -60,8 +60,28 @@ function evolve_pop!(pop::AbstractMatrix{Bool}, Niter::Int;
     end
 end
 
-function make_pop(Nsnp::Int, Nind::Int, Nhs::Int, hzygosity::Float64;
-                  initials_sample=create_pop_random)
+# asymptotic prob for individual having two different alleles
+function calc_mrate(Nind::Int, heterozygozity::Float64)
+    heterozygote_pred(Nind, mrate) =  2(mrate*(1-mrate)) / (1 - 4*(mrate-0.5)^2 * (1-1/(2Nind)))
+    obj(x) = heterozygote_pred(Nind, x) - heterozygozity
+    fzero(obj,0.0,0.9)
+end
+
+function make_all_snps_minor!(pop::Matrix)
+    select = sum(pop,2) / size(pop)[2] .> 0.5
+    pop[select,:] = ~pop[select,:]
+    pop
+end
+
+function remove_snps_under_maf_threshold(pop::Matrix, threshold::Float64)
+    select = (sum(pop,2) / size(pop)[2]) .> threshold
+    pop[select,:]
+end
+
+function make_pop(Nsnp::Int, Nind::Int, Nhs::Int;
+                  hzygosity::Float64=0.4;
+                  maf_cutoff::Float64=0.05,
+                  initials_sample::Function=create_pop_random)
     @assert Nhs < (Nsnp-1)
     mrate = calc_mrate(Nind, hzygosity)
     Niter = 4*2*Nind
@@ -74,21 +94,18 @@ function make_pop(Nsnp::Int, Nind::Int, Nhs::Int, hzygosity::Float64;
     println("# SNPs         : $Nsnp")
     println("# generations  : $Niter   ($(Niter/(2Nind)) x char. decay)")
     println("# hotspots     : $Nhs")
+    println("# maf cutoff   : $maf_cutoff")
+    println("# mutationrate : $mrate")
+    println("# approx hz    : $hzygosity")
     println()
-    println("mutationrate set to $mrate")
     println("corresponding to average heterozygosity : $hzygosity")
     println("================================================")
 
-    
     pop = initials_sample(Nsnp, Nind)
     hotspots = sample(2:Nsnp,Nhs)
     evolve_pop!(pop, Niter, hotspots=hotspots, mutationrate=mrate)
+    make_all_snps_minor!(pop)
+    pop = remove_snps_under_maf_threshold(pop, maf_cutoff)
     pop
 end
 
-# asymptotic prob for individual having two different alleles
-function calc_mrate(Nind::Int, heterozygozity::Float64)
-    heterozygote_pred(Nind, mrate) =  2(mrate*(1-mrate)) / (1 - 4*(mrate-0.5)^2 * (1-1/(2Nind)))
-    obj(x) = heterozygote_pred(Nind, x) - heterozygozity
-    fzero(obj,0.0,0.9)
-end
