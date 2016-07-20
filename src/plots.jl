@@ -28,8 +28,6 @@ function manhattanplot{T<:Real}(zscores::Vector{T}, highlight::AbstractVector{Bo
 
     neglogp = -log10(z2p(zscores))
     snpnumber = collect(1:N)
-        
-
     range = [0,N+1]
     Bonf1 = -log10(0.05/N)
     Bonf2 = -log10(0.01/N)
@@ -62,4 +60,3 @@ function uniform_quantile(N::Int)
     q += 0.5*q[2]
     q 
 end
-

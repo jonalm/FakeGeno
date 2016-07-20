@@ -81,10 +81,11 @@ end
 function make_pop(Nsnp::Int, Nind::Int, Nhs::Int;
                   hzygosity::Float64=0.4,
                   maf_cutoff::Float64=0.05,
-                  initials_sample::Function=create_pop_random)
+                  initials_sample::Function=create_pop_random,
+                  char_decays::Float64=1.5)
     @assert Nhs < (Nsnp-1)
     mrate = calc_mrate(Nind, hzygosity)
-    Niter = 4*2*Nind
+    Niter = Int(round(char_decays*2*Nind))
 
     println("================================================")
     println("generate sample population ....")
@@ -92,7 +93,8 @@ function make_pop(Nsnp::Int, Nind::Int, Nhs::Int;
     println("# inidviduals  : $Nind")
     println("# chromosomes  : $(2*Nind)")
     println("# SNPs         : $Nsnp")
-    println("# generations  : $Niter   ($(Niter/(2Nind)) x char. decay)")
+    println("# generations  : $Niter")
+    println("# char. decays : $char_decays")
     println("# hotspots     : $Nhs")
     println("# mutationrate : $mrate")
     println("# approx hz    : $hzygosity")

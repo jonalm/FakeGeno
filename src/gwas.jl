@@ -11,13 +11,16 @@ function GWAS{T<:Real}(dosage::Matrix{T}, cases::AbstractVector{Bool})
             logit = glm(dosType[one_vec dosT[:,i]], cases, Binomial(), LogitLink())
             zscores[i] = coef(logit)[2] / stderr(logit)[2]
         catch err
-            if isa(err, Base.LinAlg.PosDefException)
-                zscores[i]=NaN
-            elseif isa(err, LoadError)
-                zscores[i]=NaN
-            else
-                throw(err)
-            end
+            zscores[i] = NaN
+            # if isa(err, Base.LinAlg.PosDefException)
+            # elseif isa(err, LoadError)
+            #     zscores[i]=NaN
+            # elseif isa(err, LoadError)
+            #     println("here!")
+            #     zscores[i] = NaN
+            # else
+            #     throw(err)
+            # end
         end
     end
     zscores
