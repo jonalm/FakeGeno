@@ -87,3 +87,15 @@ function readrow(file::HDF5.HDF5File,ir_objname::ASCIIString,jc_objname::ASCIISt
     Int[i+1 for i in file[ir_objname][Int(jc1+1):Int(jc2)]]
 end
 
+function extractmat(matfn::ASCIIString, regex::Regex=r""; flat::Bool=false)
+    flatten(x) = flat ? reshape(x, prod(size(x))) : x
+    matopen(matfn) do file
+        hits = ASCIIString[]
+        for n in names(file)
+            ismatch(regex, n) && push!(hits,n)
+        end
+        length(hits)==0 && error("$regex not found")
+        length(hits)>1 && error("no unique field, specify by regex\nFound : $(join(hits,','))\n")
+        read(file, hits[1]) |> flatten
+    end
+end

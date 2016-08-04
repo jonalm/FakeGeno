@@ -8,6 +8,7 @@ using StatsFuns
 using PyPlot
 using GLM
 using HDF5
+using MAT
 
 export
 cor, #from StatsBase
@@ -33,7 +34,8 @@ nlp2z,
 cbp2abspos,
 abspos2cbp,
 findsorted,
-readrow
+readrow,
+extractmat
 
 include("initial_pop.jl")
 include("evolve_pop.jl")
