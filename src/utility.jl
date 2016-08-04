@@ -24,9 +24,13 @@ function heterozygote(pop::AbstractMatrix{Bool})
     Float64[zf[:,2] 2*pHW.*(1-pHW)]
 end
 
-removenan(vec) = vec[~isnan(vec)]
-z2p(zscores::Vector{Float64}) = Float64[2*ccdf(Normal(), abs(z)) for z in zscores]
-z2nlp(zscores::Vector{Float64}) = -log10(z2p(log))
+z2p(zscore::Float64) = 2*ccdf(Normal(), abs(zscore))
+z2p(zscore::Vector{Float64}) = Float64[z2p(z) for z in zscore]
+z2nlp(zscore::Float64) = -log10(z2p(zscore))
+z2nlp(zscore::Vector{Float64}) = -log10(z2p(zscore))
+
+p2z(p::Float64, s::Float64=1.0) = -norminvcdf(p/2) * sign(s)
+nlp2z(nlp::Float64, s::Float64=1.0) = p2z(10.^(-nlp), s)
 
 # https://genome.ucsc.edu/goldenpath/help/hg19.chrom.sizes
 CHRLENGHThg19 = cumsum(Int[0,

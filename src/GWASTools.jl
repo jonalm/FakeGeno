@@ -4,6 +4,7 @@ using ProgressMeter
 using Roots
 using Distributions
 using StatsBase
+using StatsFuns
 using PyPlot
 using GLM
 using HDF5
@@ -26,6 +27,9 @@ heterozygote,
 GWAS,
 nullpermuteGWAS,
 z2p,
+z2nlp,
+p2z,
+nlp2z,
 cbp2abspos,
 abspos2cbp,
 findsorted,
