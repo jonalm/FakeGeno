@@ -25,8 +25,8 @@ function heterozygote(pop::AbstractMatrix{Bool})
 end
 
 removenan(vec) = vec[~isnan(vec)]
-
-z2p(zscores::Vector{Float64}) = [ 2*ccdf(Normal(), abs(z)) for z in zscores]
+z2p(zscores::Vector{Float64}) = Float64[2*ccdf(Normal(), abs(z)) for z in zscores]
+z2nlp(zscores::Vector{Float64}) = -log10(z2p(log))
 
 # https://genome.ucsc.edu/goldenpath/help/hg19.chrom.sizes
 CHRLENGHThg19 = cumsum(Int[0,
