@@ -11,22 +11,25 @@ using HDF5
 using MAT
 
 export
-cor, #from StatsBase
+# fake gwas related
 calc_mrate,
 create_pop_random,
 make_pop,
 evolve_pop_once!,
 evolve_pop!,
 calc_mrate,
+calc_dosage,
+heterozygote,
+GWAS,
+nullpermuteGWAS,
+#plot related
 showmatrix,
 manhattanplot,
 zhist,
 probhist,
 uniform_quantile,
-calc_dosage,
-heterozygote,
-GWAS,
-nullpermuteGWAS,
+zz_scratterplot,
+#utility functions
 z2p,
 z2nlp,
 p2z,
