@@ -79,7 +79,7 @@ function findsorted{T<:Any}(A::Vector{T}, v::T)
     end
 end
 
-function readrow(file::HDF5.HDF5File,ir_objname::ASCIIString,jc_objname::ASCIIString,colnum::Int)
+function readrow(file::HDF5.HDF5File,ir_objname::String,jc_objname::String,colnum::Int)
     # read row indices from a CSC sparse matrix format (compressed sparse column matrix)
     # note that ir and jc in HDF5 file is assumed to be indexed from 0
     # rowindices = ir[jc[columnindex]:jc[columnindex+1]-1]
@@ -87,10 +87,10 @@ function readrow(file::HDF5.HDF5File,ir_objname::ASCIIString,jc_objname::ASCIISt
     Int[i+1 for i in file[ir_objname][Int(jc1+1):Int(jc2)]]
 end
 
-function extractmat(matfn::ASCIIString, regex::Regex=r""; flat::Bool=false)
+function extractmat(matfn::String, regex::Regex=r""; flat::Bool=false)
     flatten(x) = flat ? reshape(x, prod(size(x))) : x
     matopen(matfn) do file
-        hits = ASCIIString[]
+        hits = String[]
         for n in names(file)
             ismatch(regex, n) && push!(hits,n)
         end
