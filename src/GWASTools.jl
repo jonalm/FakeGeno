@@ -22,13 +22,6 @@ calc_dosage,
 heterozygote,
 GWAS,
 nullpermuteGWAS,
-#plot related
-showmatrix,
-manhattanplot,
-zhist,
-probhist,
-uniform_quantile,
-zz_scratterplot,
 #utility functions
 z2p,
 z2nlp,
@@ -42,7 +35,6 @@ extractmat
 
 include("initial_pop.jl")
 include("evolve_pop.jl")
-include("plots.jl")
 include("utility.jl")
 include("gwas.jl")
 
